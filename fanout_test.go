@@ -117,6 +117,8 @@ func TestBroadcastPrimitiveAndError(t *testing.T) {
 
 	bcast.Post <- constInt
 
+	bcast.Outs <- nil
+
 	select {
 	case gotInt := <-chanInt:
 		if gotInt != constInt {
