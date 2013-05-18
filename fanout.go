@@ -43,6 +43,7 @@ func (fan *FanOut) subscrLoop() {
 
 		if userCh == nil {
 			close(fan.Outs)
+			fan.Outs = nil
 			break
 		}
 
@@ -60,8 +61,7 @@ func (fan *FanOut) messageLoop() {
 	for msg := range fan.Post {
 
 		if msg == nil {
-			fan.Outs <- nil
-			close(fan.Post)
+			fan.closeAll()
 			break
 		}
 
@@ -75,4 +75,11 @@ func (fan *FanOut) messageLoop() {
 			}
 		}
 	}
+}
+
+func (fan *FanOut) closeAll() {
+	if fan.Outs != nil {
+		fan.Outs <- nil
+	}
+	close(fan.Post)
 }
