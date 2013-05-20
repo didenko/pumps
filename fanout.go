@@ -5,19 +5,19 @@ import (
 	"reflect"
 )
 
-// target struct stores channels which subscribed to a specific fan. With each consumer channel target keeps pre-extracted it's reflect.Type to speed up message processing.
+// target struct stores channels which subscribed to a specific fan. With each consumer channel the target keeps it's reflect.Type pre-extracted to speed up message processing.
 type target struct {
 	ch  reflect.Value
 	typ reflect.Type
 }
 
-// FanOut stores the in- and out-flow channel information. FanOut should not be instantiated directly, but rather via the MakeFanOut function. As this object expected to be used to route errors it itself does not emit errors to avoid ambiguity. For example, if a no-channel value fed into the Outs intake channel the code will panic while attempting to reflect on its element's type or later when it tries to post into it.
+// FanOut stores the in- and out-flow channel information. FanOut should not be instantiated directly, but rather via the MakeFanOut function. As this object expected to be used to route errors it itself does not emit errors to avoid ambiguity. For example, if a non-channel value fed into the Outs intake channel the code will panic while attempting to reflect on its element's type or later when it tries to post into it.
 type FanOut struct {
 
-	// Post channel accepts messages to be fanned out to relevant downstream channels provided by users. The Post channel buffer size provided as a parameter to MakeFanOut. Sending nil to the Post channel stops the FanOut goroutines, closes all channels and allows the object to be garbage-collected.
+	// Post channel accepts messages to be fanned out to relevant downstream channels provided by users. The Post channel's buffer size provided as a parameter to MakeFanOut. Sending nil to the Post channel stops the FanOut goroutines, closes all channels (including user-provided channels!) and allows the object to be garbage-collected.
 	Post chan interface{}
 
-	// Outs channel accepts "subscriber" channels. Messages received on the Post channel will be sent to each of channels received earlier on the via Outs, where the meggase value is assignable to the ouf-flow channel value. Sending nil to the Outs channel stops subscription goroutine and closes the Outs channel - preventing future subscriptions.
+	// Outs channel accepts "subscriber" channels. Messages received on the Post channel will be sent to each of the channels received earlier on the via Outs, where the message value is assignable to the out-flow channel value. Sending nil to the Outs channel stops subscription goroutine and closes the Outs channel - preventing future subscriptions.
 	Outs  chan interface{}
 	users []target
 }

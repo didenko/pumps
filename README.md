@@ -41,4 +41,4 @@ Generating and posting an error
     }
     errCast.Post <- hwError
 
-The error will be fowarded to fwdToSysLog and hardwareErrors channels, but not peerConnErrors (assuming PeerConnError is not assignable to HardwareError).
+The error will be fowarded to `fwdToSysLog` and `hardwareErrors` channels, but not `peerConnErrors` (assuming `PeerConnError` is not assignable to `HardwareError`).
