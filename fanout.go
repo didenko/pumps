@@ -82,4 +82,7 @@ func (fan *FanOut) closeAll() {
 		fan.Outs <- nil
 	}
 	close(fan.Post)
+	for _, tgt := range fan.users {
+		tgt.ch.Close()
+	}
 }
