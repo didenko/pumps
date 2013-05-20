@@ -13,8 +13,8 @@ In the main package
     // in the main()
     defer func(){ errCast.Post <- nil }()
 
-In a syslog forwarder
----------------------
+In a syslog forwarder setup
+---------------------------
 
     fwdToSysLog := make(chan error, 100)
     errCast.Outs <- fwdToSysLog
@@ -22,4 +22,23 @@ In a syslog forwarder
         for err := range fwdToSysLog { ...... }
     }()
 
-In an operational console handler:
+In an operational console handler setup
+---------------------------------------
+
+    peerConnErrors := make(chan *PeerConnError, 100)
+    errCast.Outs <- peerConnErrors
+
+    hardwareErrors := make(chan *HardwareError, 100)
+    errCast.Outs <- hardwareErrors
+
+Generating and posting an error
+-------------------------------
+
+    hwError := &ops.HardwareError{
+        devicePath,
+        errorCode,
+        errors.New("CRC failed"),
+    }
+    errCast.Post <- hwError
+
+The error will be fowarded to fwdToSysLog and hardwareErrors channels, but not peerConnErrors (assuming PeerConnError is not assignable to HardwareError).
