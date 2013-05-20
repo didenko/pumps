@@ -1,3 +1,7 @@
+Copyright 2013 Vlad Didenko. All rights reserved.
+Use of this source code is governed by a BSD-style
+license that can be found in the header of the fanout.go file.
+
 Package pumps is a collection of channel manipulators. Contained objects expected to communicate via channels, including meta-communication.
 
 Here is an example using the FanOut object for handling errors:
